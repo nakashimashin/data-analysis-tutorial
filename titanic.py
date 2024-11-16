@@ -50,11 +50,18 @@ print("訓練データの欠損情報: 補完後")
 print(kesson_table(train))
 
 # 文字列を数値に変換
-train["Sex"][train["Sex"] == "male"] = 0
-train["Sex"][train["Sex"] == "female"] = 1
-train["Embarked"][train["Embarked"] == "S" ] = 0
-train["Embarked"][train["Embarked"] == "C" ] = 1
-train["Embarked"][train["Embarked"] == "Q"] = 2
+# train["Sex"][train["Sex"] == "male"] = 0
+# train["Sex"][train["Sex"] == "female"] = 1
+# train["Embarked"][train["Embarked"] == "S" ] = 0
+# train["Embarked"][train["Embarked"] == "C" ] = 1
+# train["Embarked"][train["Embarked"] == "Q"] = 2
+
+train.loc[train["Sex"] == "male", "Sex"] = 0
+train.loc[train["Sex"] == "female", "Sex"] = 1
+train.loc[train["Embarked"] == "S", "Embarked"] = 0
+train.loc[train["Embarked"] == "C", "Embarked"] = 1
+train.loc[train["Embarked"] == "Q", "Embarked"] = 2
+
 
 print("訓練データの先頭10行 : 文字列を数値に変換後")
 print(train.head(10))
