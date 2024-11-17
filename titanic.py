@@ -42,14 +42,8 @@ train["Embarked"] = train["Embarked"].fillna("S")
 print("訓練データの欠損情報: 補完後")
 print(kesson_table(train))
 
-# 欠損値を補完する
-train["Age"] = train["Age"].fillna(train["Age"].median())
-train["Embarked"] = train["Embarked"].fillna("S")
 
-print("訓練データの欠損情報: 補完後")
-print(kesson_table(train))
-
-# 文字列を数値に変換
+# 文字列を数値に変換(train)
 # train["Sex"][train["Sex"] == "male"] = 0
 # train["Sex"][train["Sex"] == "female"] = 1
 # train["Embarked"][train["Embarked"] == "S" ] = 0
@@ -65,3 +59,18 @@ train.loc[train["Embarked"] == "Q", "Embarked"] = 2
 
 print("訓練データの先頭10行 : 文字列を数値に変換後")
 print(train.head(10))
+
+# 文字列を数値に変換(test)
+test["Age"] = test["Age"].fillna(test["Age"].median())
+test.loc[test["Sex"] == "male", "Sex"] = 0
+test.loc[test["Sex"] == "female", "Sex"] = 1
+test.loc[test["Embarked"] == "S", "Embarked"] = 0
+test.loc[test["Embarked"] == "C", "Embarked"] = 1
+test.loc[test["Embarked"] == "Q", "Embarked"] = 2
+test.loc[test["Fare"].isnull(), "Fare"] = test["Fare"].median()
+
+print("テストデータの欠損情報: 補完後")
+print(kesson_table(test))
+
+print("テストデータの先頭10行 : 文字列を数値に変換後")
+print(test.head(10))
