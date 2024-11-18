@@ -1,24 +1,25 @@
 import pandas as pd
 import numpy as np
+from sklearn import tree
 
 # csvファイルからデータフレーム形式でデータを読み込む
 train = pd.read_csv("./assets/train.csv")
 test = pd.read_csv("./assets/test.csv")
 
 # データフレームの先頭5行を表示
-print(train.head())
-print(test.head())
+# print(train.head())
+# print(test.head())
 
 test_shape = test.shape
 train_shape = train.shape
 
 # データフレームの行数と列数を表示
-print(train_shape)
-print(test_shape)
+# print(train_shape)
+# print(test_shape)
 
 # データフレームの情報を表示
-print(train.describe())
-print(test.describe())
+# print(train.describe())
+# print(test.describe())
 
 # 欠損値の割合を計算する関数
 def kesson_table(df):
@@ -30,17 +31,17 @@ def kesson_table(df):
     return kesson_table_ren_columns
 
 
-print("訓練データの欠損情報")
-print(kesson_table(train))
-print("テストデータの欠損情報")
-print(kesson_table(test))
+# print("訓練データの欠損情報")
+# print(kesson_table(train))
+# print("テストデータの欠損情報")
+# print(kesson_table(test))
 
 # 欠損値を補完する
 train["Age"] = train["Age"].fillna(train["Age"].median())
 train["Embarked"] = train["Embarked"].fillna("S")
 
-print("訓練データの欠損情報: 補完後")
-print(kesson_table(train))
+# print("訓練データの欠損情報: 補完後")
+# print(kesson_table(train))
 
 
 # 文字列を数値に変換(train)
@@ -69,8 +70,34 @@ test.loc[test["Embarked"] == "C", "Embarked"] = 1
 test.loc[test["Embarked"] == "Q", "Embarked"] = 2
 test.loc[test["Fare"].isnull(), "Fare"] = test["Fare"].median()
 
-print("テストデータの欠損情報: 補完後")
-print(kesson_table(test))
+# print("テストデータの欠損情報: 補完後")
+# print(kesson_table(test))
 
 print("テストデータの先頭10行 : 文字列を数値に変換後")
 print(test.head(10))
+
+# trainの目的変数と説明変数の値を取得
+target = train["Survived"].values
+features_one = train[["Pclass", "Sex", "Age", "Fare"]].values
+
+# 決定木の作成
+my_tree_one = tree.DecisionTreeClassifier()
+my_tree_one = my_tree_one.fit(features_one, target)
+
+# testの説明変数の値を取得
+test_features = test[["Pclass", "Sex", "Age", "Fare"]].values
+
+# testの説明変数を使ってmy_tree_oneのモデルで予測
+my_prediction = my_tree_one.predict(test_features)
+
+# 予測データを表示
+print(my_prediction)
+
+# PassengerIdを取得
+PassengerId = np.array(test["PassengerId"]).astype(int)
+
+# my_prediction(予測データ)とPassengerIdをデータフレームに落とし込む
+my_solution = pd.DataFrame(my_prediction, PassengerId, columns=["Survived"])
+
+# my_tree_one.csvとして書き出し
+my_solution.to_csv("data/my_tree_one.csv", index_label=["PassengerId"])
