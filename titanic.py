@@ -77,27 +77,46 @@ print("テストデータの先頭10行 : 文字列を数値に変換後")
 print(test.head(10))
 
 # trainの目的変数と説明変数の値を取得
-target = train["Survived"].values
-features_one = train[["Pclass", "Sex", "Age", "Fare"]].values
+# target = train["Survived"].values
+# features_one = train[["Pclass", "Sex", "Age", "Fare"]].values
 
 # 決定木の作成
-my_tree_one = tree.DecisionTreeClassifier()
-my_tree_one = my_tree_one.fit(features_one, target)
+# my_tree_one = tree.DecisionTreeClassifier()
+# my_tree_one = my_tree_one.fit(features_one, target)
 
 # testの説明変数の値を取得
-test_features = test[["Pclass", "Sex", "Age", "Fare"]].values
+# test_features = test[["Pclass", "Sex", "Age", "Fare"]].values
 
 # testの説明変数を使ってmy_tree_oneのモデルで予測
-my_prediction = my_tree_one.predict(test_features)
+# my_prediction = my_tree_one.predict(test_features)
 
 # 予測データを表示
-print(my_prediction)
+# print(my_prediction)
 
 # PassengerIdを取得
-PassengerId = np.array(test["PassengerId"]).astype(int)
+# PassengerId = np.array(test["PassengerId"]).astype(int)
 
 # my_prediction(予測データ)とPassengerIdをデータフレームに落とし込む
-my_solution = pd.DataFrame(my_prediction, PassengerId, columns=["Survived"])
+# my_solution = pd.DataFrame(my_prediction, PassengerId, columns=["Survived"])
 
 # my_tree_one.csvとして書き出し
-my_solution.to_csv("data/my_tree_one.csv", index_label=["PassengerId"])
+# my_solution.to_csv("data/my_tree_one.csv", index_label=["PassengerId"])
+
+# 決定ぎ+7つの説明変数
+
+features_two = train[["Pclass", "Age", "Sex", "Fare", "SibSp", "Parch", "Embarked"]].values
+
+target = train["Survived"].values
+
+# 決定木の作成とアーギュメントの設定
+max_depth = 10
+min_samples_split = 5
+my_tree_two = tree.DecisionTreeClassifier(max_depth=max_depth, min_samples_split=min_samples_split, random_state=1)
+my_tree_two = my_tree_two.fit(features_two, target)
+
+test_features_2 = test[["Pclass", "Age", "Sex", "Fare", "SibSp", "Parch", "Embarked"]].values
+
+my_prediction_tree_two = my_tree_two.predict(test_features_2)
+PassengerId = np.array(test["PassengerId"]).astype(int)
+my_solution_tree_two = pd.DataFrame(my_prediction_tree_two, PassengerId, columns=["Survived"])
+my_solution_tree_two.to_csv("data/my_tree_two.csv", index_label=["PassengerId"])
