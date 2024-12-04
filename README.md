@@ -14,7 +14,7 @@ MacOS では、Docker がホストおの GPU を直接利用することはサ�
 そのため今回は`--gpus all`オプションを使わずにコンテナを起動する
 
 ```
-docker run -itd -p 8888:8888 -v "$(pwd)"/target:/home --name kaggle gcr.io/kaggle-gpu-images/python /bin/bash
+docker run -itd -p 8888:8888 -v "$(pwd)":/home --name kaggle gcr.io/kaggle-gpu-images/python /bin/bash
 ```
 
 #### オプション
@@ -42,10 +42,10 @@ docker run -itd -p 8888:8888 -v "$(pwd)"/target:/home --name kaggle gcr.io/kaggl
   - これにより、ホストマシンの`localhost: 8888`で、コンテナのサービス
     (例えば Jupyter Notebook)にアクセスできる
 
-3. `-v "$(pwd)"/target:/home`
+3. `-v "$(pwd)":/home`
 
 - ボリュームマウントを指定
-  - ホストの`$(pwd)/target`ディレクトリをコンテナの`/home`ディレクトリにマウントする。
+  - ホストの`$(pwd)`ディレクトリをコンテナの`/home`ディレクトリにマウントする。
   - `$(pwd)`: 現在の作業ディレクトリのパスを取得する
   - コンテナ内では`/home`ディレクトリとしてアクセス可能(マウント先)
   - ホストとコンテナでデータを共有できる
